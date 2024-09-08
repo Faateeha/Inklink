@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import ColorModeToggle from '@/components/colormode'
 
 import { ChakraProvider } from "@chakra-ui/react";
 
@@ -22,8 +23,10 @@ export default function RootLayout({
         
       <body className={poppins.className} >
       <ChakraProvider>
-        <div className="bg-black text-white p-3 ">
+      
+        <div className=" p-3 ">
         {children}
+        
         </div>
         </ChakraProvider>
         </body>

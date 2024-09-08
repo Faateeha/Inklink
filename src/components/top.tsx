@@ -41,6 +41,7 @@ export default function Top() {
         <div>
           {user ? (
             <>
+            <Link href='/main/profile'>
               <Avatar
                 size="md"
                 name={user.displayName || "User"}
@@ -48,6 +49,7 @@ export default function Top() {
               >
                 {!user.photoURL && getInitials(user.displayName || "User")}
               </Avatar>
+              </Link>
               <button onClick={handleSignOut} className="p-2 border-2 rounded-md hover:bg-amber-500 mr-2 ml-4">Logout</button>
             </>
           ) : (

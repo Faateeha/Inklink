@@ -1,6 +1,7 @@
 import React from 'react';
 import Top from '@/components/top'
 import Footer from '@/components/Footer'
+import ColorModeToggle from '@/components/colormode'
 
 
 export default function MainLayout({
@@ -9,7 +10,8 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
     return (
-        <div className="bg-black text-white ">
+        <div className=" ">
+          
           <Top />
         {children}
         <Footer />

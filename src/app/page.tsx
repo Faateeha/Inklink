@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Link from "next/link";
 
 export default function Home() {
   
@@ -16,9 +17,11 @@ export default function Home() {
           <p className="text-lg md:text-2xl pt-3">
             Where Ideas Take Shape and Words Find Their Home.
           </p>
+          <Link href='/main/read'>
           <button className="p-3 bg-amber-600 hover:bg-amber-400 rounded-xl ml-10 mt-3 text-xl">
             Start Reading
-          </button>
+          </button></Link>
+          
         </div>
         <div className="mt-8 lg:mt-0 hidden lg:block ">
           <Image

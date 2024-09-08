@@ -1,3 +1,4 @@
+import ColorModeToggle from './colormode'
 export default function Footer () {
     return (
         <div>
@@ -6,6 +7,7 @@ export default function Footer () {
                 <p>&copy; 2024, All rights reserved.</p>
                 
             </footer>
+            
         </div>
     )
 }
