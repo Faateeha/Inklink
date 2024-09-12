@@ -29,27 +29,27 @@ const Navbar: React.FC = () => {
         <div className='font-bold text-3xl text-amber-500'>
           INKLINK
         </div>
-        <ColorModeToggle />
+        
         <div className='hidden md:block text-lg'>
-          
+        <ColorModeToggle />
           <Link href='/main/our-story' className='pr-5 hover:text-amber-300'>Our Story</Link>
           <Link href='/main/contact-us' className='pr-5 hover:text-amber-300'>Contact us</Link>
           {/* Prevent access to Write and Get Started without login */}
-          <a
+          <Link
             href="/get-started"
             className='pr-5 hover:text-amber-300'
             onClick={(e) => handleProtectedRoute(e, '/get-started')}
           >
             Write
-          </a>
+          </Link>
           <button>
-            <a
+            <Link
               href="/get-started"
               className='bg-amber-500 p-2 rounded-lg hover:bg-amber-400'
               onClick={(e) => handleProtectedRoute(e, '/get-started')}
             >
               Get Started
-            </a>
+            </Link>
           </button>
         </div>
         <Box display={{ base: "block", md: "none" }}>
@@ -72,6 +72,7 @@ const Navbar: React.FC = () => {
               height="100vh"
               p={4}
               zIndex="overlay" // Ensure it’s below the close icon
+              bg="white"
             >
               <Flex direction="column" align="flex-end" h="100%">
                 {/* Close button at the top right */}
