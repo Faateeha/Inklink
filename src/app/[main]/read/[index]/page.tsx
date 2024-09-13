@@ -1,9 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation'; // useParams for dynamic routing
 import Image from 'next/image';
 import { FaThumbsUp, FaBookmark, FaRegCommentDots } from 'react-icons/fa'; // Icons for like, bookmark, and comment
-import { defaultStories } from '@/app/[main]/read/page'; // Correct import path to stories array
+import {defaultStories} from '@/app/[main]/stories'// Correct import path to stories array
 import { auth } from '@/app/firebase'; // Import your auth provider hook for user info
 import { useAuth } from '@/app/auth';
 interface Story {
