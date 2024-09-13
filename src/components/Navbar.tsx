@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
         </div>
         
         <div className='hidden md:block text-lg'>
-        <ColorModeToggle />
+       
           <Link href='/main/our-story' className='pr-5 hover:text-amber-300'>Our Story</Link>
           <Link href='/main/contact-us' className='pr-5 hover:text-amber-300'>Contact us</Link>
           {/* Prevent access to Write and Get Started without login */}

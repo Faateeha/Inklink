@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from 'next/link';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/firebase";
+import { useAuth } from '@/app/auth';
 
 // Default stories array
-const defaultStories = [
+export const defaultStories = [
   {
     title: "The Story of the Inklink",
     content:
@@ -26,6 +27,7 @@ const defaultStories = [
 ];
 
 const Read: React.FC = () => {
+  const user: { name: string; avatar: string } | null = useAuth();
   const [fetchedStories, setFetchedStories] = useState<any[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
@@ -58,16 +60,16 @@ const Read: React.FC = () => {
   {filteredStories.map((story, index) => (
     <div
       key={index}
-      className="flex flex-col md:flex-row justify-between p-6 rounded-lg shadow-lg mb-4 transition-transform transform hover:scale-105"
+      className="flex flex-col md:flex-row justify-between p-6 md:mr-8 rounded-lg shadow-lg mb-4 transition-transform transform hover:scale-105"
     >
       {/* Image (comes first on mobile) */}
-      <div className="w-full md:w-1/3 order-1 md:order-none mt-4 md:mt-0 ml-0 md:ml-6">
+      <div className="w-full md:w-1/3 order-1 md:order-none mt-4 md:mt-0 ml-0 md:ml-6 md:pr-4 ">
         <Image
           src={story.image}
           alt="story image"
           width={500}
           height={250}
-          className="rounded-lg object-cover w-full h-auto"
+          className="rounded-lg object-cover w-full h-auto  shadow-md"
         />
       </div>
 
@@ -86,11 +88,22 @@ const Read: React.FC = () => {
             </span>
           ))}
         </div>
-        <Link href={`/read/${index}`}>
+        {/* Conditionally render the "Read Post" button based on login status */}
+      {user ? (
+        <Link href={`/main/read/${index}`}>
           <button className="mt-4 bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-400 transition-colors">
             Read Post
           </button>
         </Link>
+      ) : (
+        <button
+          className="mt-4 bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed"
+          title="You need to log in to read this post"
+          disabled
+        >
+          Read Post
+        </button>
+      )}
       </div>
     </div>
   ))}
