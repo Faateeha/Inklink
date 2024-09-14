@@ -7,8 +7,6 @@ import { db } from "@/app/firebase";
 import { useAuth } from '@/app/auth';
 import {defaultStories} from '@/app/[main]/stories'
 
-// Default stories array
-
 
 const Read: React.FC = () => {
   const user: { name: string; avatar: string } | null = useAuth();
