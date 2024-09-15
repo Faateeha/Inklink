@@ -71,12 +71,13 @@ export default function Top() {
           </MenuItem>
         </MenuList>
       </Menu>
+      <ColorModeToggle />
     </>
   ) : (
     <>
       <button
         onClick={openSignInModal}
-        className="p-2 border-2 rounded-md hover:bg-amber-500 mr-2"
+        className="p-2 border-2 sm:ml-2 rounded-md hover:bg-amber-500 mr-2"
       >
         Sign In
       </button>
@@ -91,9 +92,7 @@ export default function Top() {
       <SignUpModal isOpen={isSignUpOpen} onClose={closeSignUpModal} />
     </>
   )}
-  
-  {/* Color Mode Toggle */}
-  <ColorModeToggle />
+ 
 </div>
 
         

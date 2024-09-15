@@ -1,10 +1,13 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation'; // useParams for dynamic routing
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { FaThumbsUp, FaBookmark, FaRegCommentDots } from 'react-icons/fa'; 
-import {defaultStories} from '@/app/[main]/stories'
+import { FaThumbsUp, FaBookmark, FaRegCommentDots } from 'react-icons/fa';
+import { defaultStories } from '@/app/[main]/stories'; // Local stories
+import { db } from '@/app/firebase'; // Firebase setup
+import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '@/app/auth';
+
 interface Story {
   title: string;
   content: string;
@@ -19,28 +22,46 @@ interface Comment {
 }
 
 const Post = () => {
-  
   const user = useAuth(); // Get logged-in user's data (name, avatar)
-  const params = useParams(); // Get the dynamic params
-  const { index } = params || {}; // Destructure index from params
+  const { index } = useParams<{ index: string }>();
+   // Get the dynamic params
 
+  const [story, setStory] = useState<Story | null>(null);
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState<Comment[]>([]); // For storing user comments
+  const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && index) {
-      // Check localStorage for like, bookmark, and comment states on initial load
-      const savedLiked = localStorage.getItem(`liked-${index}`);
-      const savedBookmarked = localStorage.getItem(`bookmarked-${index}`);
-      const savedComments = localStorage.getItem(`comments-${index}`);
-
-      if (savedLiked) setLiked(JSON.parse(savedLiked));
-      if (savedBookmarked) setBookmarked(JSON.parse(savedBookmarked));
-      if (savedComments) setComments(JSON.parse(savedComments));
-    }
+    const fetchStory = async () => {
+      try {
+        if (index) {
+          console.log(`Fetching story with index: ${index}`);
+          const storyRef = doc(db, 'stories', index);
+          const storySnap = await getDoc(storyRef);
+  
+          if (storySnap.exists()) {
+            console.log('Story found in Firebase:', storySnap.data());
+            setStory(storySnap.data() as Story);
+          } else {
+            console.log('Story not found in Firebase, checking local stories...');
+            const localStory = defaultStories[parseInt(index as string)];
+            if (localStory) {
+              console.log('Story found in local stories:', localStory);
+              setStory(localStory);
+            } else {
+              console.error('Story not found in local stories.');
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching story:', error);
+      }
+    };
+  
+    fetchStory();
   }, [index]);
+  
 
   const toggleLike = () => {
     setLiked(!liked);
@@ -55,32 +76,25 @@ const Post = () => {
   const handleCommentSubmit = () => {
     if (comment.trim() && user) {
       const newComment = {
-        user: user?.name || 'Anonymous', // Use logged-in user's name or fallback
-        avatar: user?.avatar || '/default-avatar.png', // Use logged-in user's avatar or fallback
+        user: user?.name || 'Anonymous',
+        avatar: user?.avatar || '/default-avatar.png',
         content: comment,
       };
       const updatedComments = [...comments, newComment];
       setComments(updatedComments);
-      setComment(''); // Clear the input after submission
-      localStorage.setItem(`comments-${index}`, JSON.stringify(updatedComments)); // Save comments to localStorage
+      setComment('');
+      localStorage.setItem(`comments-${index}`, JSON.stringify(updatedComments));
     }
   };
 
-  // If the index doesn't exist yet
-  if (!index) return <p>Loading...</p>;
-
-  // Get the specific story using the index
-  const story = defaultStories[parseInt(index as string)];
-
-  // If no story is found with that index
-  if (!story) return <p>Post not found.</p>;
+  if (!story) return <p>Loading...</p>;
 
   return (
     <div className="p-8">
       <h1 className="text-4xl font-bold text-amber-500 mb-4">{story.title}</h1>
       <p className="text-lg mb-6">{story.content}</p>
       <Image
-        src={story.image}
+        src={story.image }
         alt="story image"
         width={600}
         height={300}
@@ -88,7 +102,6 @@ const Post = () => {
       />
       <p className="text-gray-500 mb-4">Published on: {story.date}</p>
 
-      {/* Like, Bookmark, and Comment Section */}
       <div className="flex items-center gap-4 mb-6">
         <button
           className={`flex items-center gap-2 px-4 py-2 rounded-lg ${liked ? 'text-amber-500' : 'text-gray-600'}`}
@@ -107,7 +120,6 @@ const Post = () => {
         </button>
       </div>
 
-      {/* Comment Section */}
       <div className="mb-6">
         <h3 className="text-2xl font-semibold mb-4">Comments</h3>
         <textarea
@@ -123,7 +135,6 @@ const Post = () => {
           Post Comment
         </button>
 
-        {/* Displaying comments */}
         {comments.length > 0 && (
           <div className="mt-6">
             {comments.map((comment, idx) => (
@@ -149,4 +160,3 @@ const Post = () => {
 };
 
 export default Post;
-
