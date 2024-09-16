@@ -1,8 +1,10 @@
-'use client';
+
+"use client";
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/app/firebase";
+import AuthModals from "@/app/authModals";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import {
@@ -15,11 +17,16 @@ import {
   ModalBody,
   ModalCloseButton,
   Input,
-  Text,
-  Box
+  Text
 } from "@chakra-ui/react";
 
-export default function SignInModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+interface SignInModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  openSignUp: () => void; // Function to open the sign-up modal
+}
+
+export default function SignInModal({ isOpen, onClose, openSignUp }: SignInModalProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -62,13 +69,7 @@ export default function SignInModal({ isOpen, onClose }: { isOpen: boolean, onCl
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent
-        bg="black"
-        color="white"
-        maxW="lg"
-        py={6}
-        px={8}
-      >
+      <ModalContent maxW="lg" py={6} px={8}>
         <ModalHeader textAlign="center" fontSize="2xl" fontWeight="bold" color="amber.500">
           Sign In
         </ModalHeader>
@@ -101,7 +102,7 @@ export default function SignInModal({ isOpen, onClose }: { isOpen: boolean, onCl
             colorScheme="orange"
             size="lg"
             width="full"
-            onClick={handleSignIn} // Sign in only when button is clicked
+            onClick={handleSignIn}
             mb={4}
           >
             Sign In
@@ -130,6 +131,13 @@ export default function SignInModal({ isOpen, onClose }: { isOpen: boolean, onCl
             Sign In with Google
           </Button>
 
+          <Text color="amber.500" mb={4}>
+            Don&apos;t have an account?{" "}
+            <Button variant="link" color="amber.500" onClick={openSignUp}>
+              Sign Up
+            </Button>
+          </Text>
+
           <Link href="/">
             <Text color="amber.500" _hover={{ textDecoration: "underline" }}>
               <b>Go back to home page</b>
@@ -140,3 +148,4 @@ export default function SignInModal({ isOpen, onClose }: { isOpen: boolean, onCl
     </Modal>
   );
 }
+

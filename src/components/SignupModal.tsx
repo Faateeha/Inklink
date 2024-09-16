@@ -66,8 +66,6 @@ export default function SignUpModal({ isOpen, onClose }: { isOpen: boolean, onCl
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent
-        bg="black" // Black background
-        color="white" // White text color
         maxW="lg" // Larger width for the modal
         py={6} // Padding for vertical spacing
         px={8} // Padding for horizontal spacing

@@ -81,7 +81,7 @@ export default function Top() {
       >
         Sign In
       </button>
-      <SignInModal isOpen={isSignInOpen} onClose={closeSignInModal} />
+      <SignInModal isOpen={isSignInOpen} onClose={closeSignInModal}  openSignUp={openSignUpModal} />
 
       <button
         onClick={openSignUpModal}

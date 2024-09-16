@@ -2,11 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/firebase";
 import { useAuth } from "@/app/auth";
-import { defaultStories } from "@/app/[main]/stories";
-import  incrementReadCount  from "@/app/readCount";  // Import the function
+import incrementReadCount from "@/app/readCount";  // Import the function
 
 const Read: React.FC = () => {
   const user: { name: string; avatar: string } | null = useAuth();
@@ -15,20 +14,24 @@ const Read: React.FC = () => {
 
   // Fetch stories from Firebase
   const fetchStories = async () => {
-    const querySnapshot = await getDocs(collection(db, "stories"));
-    const storiesFromFirebase = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setFetchedStories(storiesFromFirebase); // Set the fetched stories in state
+    try {
+      const querySnapshot = await getDocs(collection(db, "stories"));
+      const storiesFromFirebase = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setFetchedStories(storiesFromFirebase); // Set the fetched stories in state
+    } catch (error) {
+      console.error("Error fetching stories:", error);
+    }
   };
 
   useEffect(() => {
     fetchStories();
   }, []);
 
-  // Combine default and fetched stories
-  const allStories = [...defaultStories, ...fetchedStories];
+  
+  const allStories = [ ...fetchedStories];
 
   // Extract all unique tags
   const allTags = Array.from(
@@ -40,13 +43,16 @@ const Read: React.FC = () => {
     ? allStories.filter((story) => story.tags.includes(selectedTag))
     : allStories;
 
-  const handleReadPost = async (storyId: string) => {
-    if (user) {
-      // Increment read count
-      await incrementReadCount(storyId);
-      // Navigate to the post details page or perform any other action
-    }
-  };
+    const handleReadPost = async (storyId: string) => {
+      if (user) {
+        try {
+          await incrementReadCount(storyId);
+          // Navigate to the post details page
+        } catch (error) {
+          console.error("Error handling read post:", error);
+        }
+      }
+    };
 
   return (
     <div className="flex justify-between w-full p-8">
@@ -91,7 +97,7 @@ const Read: React.FC = () => {
                 {story.tags.map((tag: string, tagIndex: number) => (
                   <span
                     key={tagIndex}
-                    className="border-2 border-amber-200 px-2 py-1 rounded-full text-sm"
+                    className="border-2 border-amber-200 px-2 py-1 rounded-full text-sm "
                     onClick={() => setSelectedTag(tag)}
                   >
                     {tag}
@@ -101,7 +107,7 @@ const Read: React.FC = () => {
               
               {/* Conditionally render the "Read Post" button based on login status */}
               {user ? (
-                <Link href={`/main/read/${index}`}>
+                <Link href={`/main/read/${story.id}`}>
                   <button
                     onClick={() => handleReadPost(story.id)}
                     className="mt-4 bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-400 transition-colors"
@@ -145,6 +151,7 @@ const Read: React.FC = () => {
 };
 
 export default Read;
+
 
 
 

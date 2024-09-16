@@ -7,6 +7,10 @@ export const defaultStories = [
       image: "/Images/inklink-1.jpg",
       date: "2021-10-10",
       tags: ["Writing", "Storytelling", "Inspiration"],
+      readCount: "",
+      likes: "",
+      bookmarks: "",
+      comments: "",
     },
     {
       id: "2",
@@ -16,5 +20,9 @@ export const defaultStories = [
       image: "/Images/inklink-1.jpg",
       date: "2024-05-12",
       tags: ["Writing", "Creativity", "Skill Development"],
+      readCount: "",
+      likes: "",
+      bookmarks: "",
+      comments: "",
     },
   ];
