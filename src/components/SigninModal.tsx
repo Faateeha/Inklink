@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/app/firebase";
-import AuthModals from "@/app/authModals";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import {
@@ -27,6 +26,11 @@ interface SignInModalProps {
 }
 
 export default function SignInModal({ isOpen, onClose, openSignUp }: SignInModalProps) {
+  const handleSwitchToSignUp = () => {
+    onClose(); // Close the SignIn modal
+    openSignUp(); 
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -133,7 +137,7 @@ export default function SignInModal({ isOpen, onClose, openSignUp }: SignInModal
 
           <Text color="amber.500" mb={4}>
             Don&apos;t have an account?{" "}
-            <Button variant="link" color="amber.500" onClick={openSignUp}>
+            <Button variant="link" color="amber.500" onClick={handleSwitchToSignUp} >
               Sign Up
             </Button>
           </Text>

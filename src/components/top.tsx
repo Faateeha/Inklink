@@ -35,7 +35,10 @@ export default function Top() {
   const openSignInModal = () => setIsSignInOpen(true);
   const closeSignInModal = () => setIsSignInOpen(false);
 
-  const openSignUpModal = () => setIsSignUpOpen(true);
+  const openSignUpModal = () => {
+    setIsSignUpOpen(true);
+    setIsSignInOpen(false); // Ensure SignIn modal closes when opening SignUp
+  }
   const closeSignUpModal = () => setIsSignUpOpen(false);
 
   return (
