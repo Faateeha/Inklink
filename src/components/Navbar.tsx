@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import ColorModeToggle from '@/components/colormode';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   useDisclosure,
@@ -23,6 +24,7 @@ const Navbar: React.FC = () => {
   const [user] = useAuthState(auth); // Use Firebase's auth state
   const { isOpen: isSignInOpen, onOpen: openSignIn, onClose: closeSignIn } = useDisclosure(); // Modal state for Sign-in
   const { isOpen: isSignUpOpen, onOpen: openSignUp, onClose: closeSignUp } = useDisclosure(); // Modal state for Sign-up
+  const router = useRouter(); 
 
   // Function to handle protected routes
   const handleProtectedRoute = (e: React.MouseEvent, path: string) => {
@@ -30,16 +32,13 @@ const Navbar: React.FC = () => {
       e.preventDefault();
       openSignIn(); // Open sign-in modal if the user is not logged in
     } else {
-      if (typeof window !== 'undefined') {
-        // Only run this in the browser, not during SSR
-        window.location.href = path;
-      }
+      router.push(path); // Redirect to the protected route if the user is logged in
     }
   };
 
   const openSignUpModal = () => {
-    closeSignIn(); // Ensure SignIn modal closes when opening SignUp
-    openSignUp();  // Open the SignUp modal
+    closeSignIn(); 
+    openSignUp();  
   };
 
   return (
