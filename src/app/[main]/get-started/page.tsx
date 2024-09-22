@@ -47,21 +47,26 @@ const WritePage = () => {
 
   // Submit the form
   const handleSubmit = async () => {
+    if (typeof window === 'undefined') {
+      // Skip if this is being run in a server environment
+      return;
+    }
+  
     // Basic validation
     if (!title || !content || !image) {
       setError('Please fill all fields.');
       return;
     }
-
+  
     setLoading(true);
     setError(null);
-
+  
     try {
       // Step 1: Upload Image to Firebase Storage
       const imageRef = ref(storage, `images/${image.name}`);
       await uploadBytes(imageRef, image);
       const imageUrl = await getDownloadURL(imageRef);
-
+  
       // Step 2: Save Content to Firebase Firestore
       await addDoc(collection(db, 'stories'), {
         title,
@@ -70,7 +75,7 @@ const WritePage = () => {
         tags,
         createdAt: serverTimestamp(),
       });
-
+  
       alert('Content submitted successfully!');
       router.push('/main/read'); // Redirect to the Read page
     } catch (error) {
@@ -80,6 +85,7 @@ const WritePage = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <Box className="container mx-auto px-4 py-10">
@@ -155,7 +161,7 @@ const WritePage = () => {
         Submit Story
       </Button>
 
-      {loading && <Spinner size="xl" mt={4} />}
+      {/*{loading && <Spinner size="xl" mt={4} />}*/}
     </Box>
   );
 };
