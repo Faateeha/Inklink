@@ -1,3 +1,4 @@
+'use client'
 import { doc, updateDoc, increment } from 'firebase/firestore';
 import { db } from '@/app/firebase'; // Ensure this path is correct
 
