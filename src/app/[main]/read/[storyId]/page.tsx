@@ -33,54 +33,54 @@ const Post: React.FC = () => {
   const [bookmarked, setBookmarked] = useState(false);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState<Comment[]>([]);
-  const [loading, setLoading ] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
+  const [likeLoading, setLikeLoading] = useState<boolean>(false);
+  const [bookmarkLoading, setBookmarkLoading] = useState<boolean>(false);
 
-  
-    
+  const fetchStory = async () => {
+    if (!id) return;
+    try {
+      const storyRef = doc(db, 'stories', id as string);
+      const storySnap = await getDoc(storyRef);
 
-    const fetchStory = async () => {
-      if (!id) return;
-      try {
-        const storyRef = doc(db, 'stories', id as string);
-        const storySnap = await getDoc(storyRef);
+      if (storySnap.exists()) {
+        const storyData = storySnap.data();
+        const formattedStory: Story = {
+          title: storyData.title,
+          content: storyData.content,
+          imageUrl: storyData.imageUrl,
+          date: storyData.date,
+          likes: storyData.likes || [],
+          bookmarks: storyData.bookmarks || [],
+          comments: storyData.comments || [],
+        };
+        setStory(formattedStory);
+        setLiked(storyData.likes?.includes(user?.uid || '') ?? false);
+        setBookmarked(storyData.bookmarks?.includes(user?.uid || '') ?? false);
+        setComments(storyData.comments || []);
+        setLoading(false);
 
-        if (storySnap.exists()) {
-          const storyData = storySnap.data();
-          const formattedStory: Story = {
-            title: storyData.title,
-            content: storyData.content,
-            imageUrl: storyData.imageUrl,
-            date: storyData.date,
-            likes: storyData.likes || [],
-            bookmarks: storyData.bookmarks || [],
-            comments: storyData.comments || [],
-          };
-          setStory(formattedStory);
-          setLiked(storyData.likes?.includes(user?.uid || '') ?? false);
-          setBookmarked(storyData.bookmarks?.includes(user?.uid || '') ?? false);
-          setComments(storyData.comments || []);
-          setLoading(false);
-
-          if (user) {
-            await incrementReadCount(id as string);
-          }
-        } else {
-          console.error('No story found for ID:', id);
+        if (user) {
+          await incrementReadCount(id as string);
         }
-      } catch (error) {
-        console.error('Error fetching story:', error);
+      } else {
+        console.error('No story found for ID:', id);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching story:', error);
+    }
+  };
 
-    useEffect(() => {
-      fetchStory();
-    }, [id]);
+  useEffect(() => {
+    fetchStory();
+  }, [id]);
 
   const toggleLike = async () => {
     if (!user) return;
     const storyRef = doc(db, 'stories', id as string || '');
     const newLikedState = !liked;
     setLiked(newLikedState);
+    setLikeLoading(true);
 
     try {
       if (newLikedState) {
@@ -94,14 +94,17 @@ const Post: React.FC = () => {
       }
     } catch (error) {
       console.error('Error updating like status:', error);
+    } finally {
+      setLikeLoading(false);
     }
   };
 
   const toggleBookmark = async () => {
     if (!user) return;
-    const storyRef = doc(db, 'stories', id as string|| '');
+    const storyRef = doc(db, 'stories', id as string || '');
     const newBookmarkedState = !bookmarked;
     setBookmarked(newBookmarkedState);
+    setBookmarkLoading(true);
 
     try {
       if (newBookmarkedState) {
@@ -115,12 +118,14 @@ const Post: React.FC = () => {
       }
     } catch (error) {
       console.error('Error updating bookmark status:', error);
+    } finally {
+      setBookmarkLoading(false);
     }
   };
 
   const handleCommentSubmit = async () => {
     if (!user || !comment.trim()) return;
-    const storyRef = doc(db, 'stories', id as string|| '');
+    const storyRef = doc(db, 'stories', id as string || '');
 
     try {
       await updateDoc(storyRef, {
@@ -141,7 +146,9 @@ const Post: React.FC = () => {
     }
   };
 
-  if (!story) return <div>Loading...</div>;
+  if (loading) return <div className="loader">Loading...</div>; // Use a loader component here
+
+  if (!story) return <div className="loader">Loading...</div>; // Use a loader component here
 
   return (
     <div className="p-6">
@@ -161,6 +168,7 @@ const Post: React.FC = () => {
         <button
           onClick={toggleLike}
           className={`flex items-center gap-2 px-4 py-2 rounded ${liked ? 'bg-red-500 text-white' : 'bg-white'}`}
+          disabled={likeLoading}
         >
           <FaThumbsUp />
           <span>{liked ? 'Liked' : 'Like'}</span>
@@ -168,6 +176,7 @@ const Post: React.FC = () => {
         <button
           onClick={toggleBookmark}
           className={`flex items-center gap-2 px-4 py-2 rounded ${bookmarked ? 'bg-yellow-500 text-white' : 'bg-white'}`}
+          disabled={bookmarkLoading}
         >
           <FaBookmark />
           <span>{bookmarked ? 'Bookmarked' : 'Bookmark'}</span>
@@ -179,7 +188,7 @@ const Post: React.FC = () => {
         <h2 className="text-2xl font-semibold mb-2">Comments</h2>
         <div className="mb-4">
           {comments.map((comment, index) => (
-            <div key={index} className="flex gap-4 mb-2">
+            <div key={`${comment.user}-${index}`} className="flex gap-4 mb-2">
               <Image
                 src={comment.avatar}
                 alt={comment.user}
@@ -214,4 +223,5 @@ const Post: React.FC = () => {
 };
 
 export default Post;
+
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ColorModeToggle from '@/components/colormode';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -24,7 +24,13 @@ const Navbar: React.FC = () => {
   const [user] = useAuthState(auth); // Use Firebase's auth state
   const { isOpen: isSignInOpen, onOpen: openSignIn, onClose: closeSignIn } = useDisclosure(); // Modal state for Sign-in
   const { isOpen: isSignUpOpen, onOpen: openSignUp, onClose: closeSignUp } = useDisclosure(); // Modal state for Sign-up
-  const router = useRouter(); 
+  const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true); // Set to true after the component mounts
+  }, []);
+ 
 
   // Function to handle protected routes
   const handleProtectedRoute = (e: React.MouseEvent, path: string) => {
@@ -32,6 +38,7 @@ const Navbar: React.FC = () => {
       e.preventDefault();
       openSignIn(); // Open sign-in modal if the user is not logged in
     } else {
+      onToggle(); 
       router.push(path); // Redirect to the protected route if the user is logged in
     }
   };
@@ -74,7 +81,7 @@ const Navbar: React.FC = () => {
               <Link
                 href="/main/get-started"
                 className="bg-amber-500 p-2 rounded-lg hover:bg-amber-400"
-                onClick={(e) => handleProtectedRoute(e, '/get-started')}
+                onClick={(e) => handleProtectedRoute(e, '/main/get-started')}
               >
                 Get Started
               </Link>
@@ -141,7 +148,7 @@ const Navbar: React.FC = () => {
                     <Link
                       href="/get-started"
                       className="hover:text-amber-300"
-                      onClick={(e) => handleProtectedRoute(e, '/get-started')}
+                      onClick={(e) => handleProtectedRoute(e, '/main/get-started')}
                     >
                       Write
                     </Link>
@@ -150,7 +157,7 @@ const Navbar: React.FC = () => {
                     <Link
                       href="/get-started"
                       className="px-2 mt-5 hover:text-amber-400 bg-amber-500 rounded-lg"
-                      onClick={(e) => handleProtectedRoute(e, '/get-started')}
+                      onClick={(e) => handleProtectedRoute(e, '/main/get-started')}
                     >
                       Get Started
                     </Link>

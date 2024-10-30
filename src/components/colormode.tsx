@@ -1,16 +1,18 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 
-
 const ColorModeToggle: React.FC = () => {
-  const [isDarkMode, setIsDarkMode] = React.useState<boolean>(() =>
-    document.documentElement.classList.contains("dark")
-  );
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Check for dark mode in the componentDidMount lifecycle
+    setIsDarkMode(document.documentElement.classList.contains("dark"));
+  }, []);
 
   const toggleColorMode = () => {
     document.documentElement.classList.toggle("dark");
-    setIsDarkMode(!isDarkMode);
+    setIsDarkMode((prevMode) => !prevMode);
   };
 
   return (
@@ -28,3 +30,4 @@ const ColorModeToggle: React.FC = () => {
 };
 
 export default ColorModeToggle;
+

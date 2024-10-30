@@ -11,6 +11,7 @@ const Read: React.FC = () => {
   const user: { name: string; avatar: string } | null = useAuth();
   const [fetchedStories, setFetchedStories] = useState<any[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Fetch stories from Firebase
   const fetchStories = async () => {
@@ -23,6 +24,8 @@ const Read: React.FC = () => {
       setFetchedStories(storiesFromFirebase); // Set the fetched stories in state
     } catch (error) {
       console.error("Error fetching stories:", error);
+    }  finally {
+      setLoading(false); // Set loading to false after fetching
     }
   };
 
@@ -66,7 +69,7 @@ const Read: React.FC = () => {
             {/* Image */}
             <div className="w-full md:w-1/3 order-1 md:order-none mt-4 md:mt-0 ml-0 md:ml-6 md:pr-4">
               <Image
-                src={story.imageUrl || story.image} // Image URL from Firebase or default story
+                src={story.imageUrl || story.image || 'images/inklink-1.jpg'} // Image URL from Firebase or default story
                 alt="story image"
                 width={500}
                 height={250}
