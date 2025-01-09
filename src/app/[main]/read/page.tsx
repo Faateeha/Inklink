@@ -48,7 +48,7 @@ const Read: React.FC = () => {
 
   const handleReadPost = async (storyId: string) => {
       if (user) {
-        console.log('handleReadPost called for storyId:', storyId); 
+        //console.log('handleReadPost called for storyId:', storyId); 
         try {
           await incrementReadCount(storyId);
         } catch (error) {
@@ -58,7 +58,7 @@ const Read: React.FC = () => {
     };
 
   return (
-    <div className="flex justify-between w-full p-8">
+    <div className="flex justify-between w-full p-4 md:p-8">
       {/* Left section (75%) */}
       <div className="w-full md:w-3/4">
         {filteredStories.map((story, index) => (
