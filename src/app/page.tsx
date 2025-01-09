@@ -27,7 +27,7 @@ export default function Home() {
         </div>
         <div className="mt-8 lg:mt-0 hidden lg:block ">
           <Image
-            src="/images/inklink-1.jpg"
+            src="/inklink-1.jpg"
             alt="Hero Image"
             width={600}
             height={400}
