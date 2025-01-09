@@ -6,7 +6,7 @@ import { FaThumbsUp, FaBookmark } from 'react-icons/fa';
 import { db } from '@/app/firebase'; // Firebase setup  
 import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { useAuth } from '@/app/auth';
-import incrementReadCount from "@/app/readCount";
+//import incrementReadCount from "@/app/readCount";
 
 interface Story {
   title: string;
@@ -61,7 +61,7 @@ const Post: React.FC = () => {
         setLoading(false);
 
         if (user) {
-          await incrementReadCount(id as string);
+          return;
         }
       } else {
         console.error('No story found for ID:', id);

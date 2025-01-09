@@ -46,8 +46,9 @@ const Read: React.FC = () => {
     ? allStories.filter((story) => story.tags.includes(selectedTag))
     : allStories;
 
-    const handleReadPost = async (storyId: string) => {
+  const handleReadPost = async (storyId: string) => {
       if (user) {
+        console.log('handleReadPost called for storyId:', storyId); 
         try {
           await incrementReadCount(storyId);
         } catch (error) {
