@@ -5,7 +5,7 @@ import Link from "next/link";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/firebase";
 import { useAuth } from "@/app/auth";
-import incrementReadCount from "@/app/readCount";  // Import the function
+import incrementReadCount from "@/app/readCount";  
 
 const Read: React.FC = () => {
   const user: { name: string; avatar: string } | null = useAuth();
@@ -21,11 +21,11 @@ const Read: React.FC = () => {
         id: doc.id,
         ...doc.data(),
       }));
-      setFetchedStories(storiesFromFirebase); // Set the fetched stories in state
+      setFetchedStories(storiesFromFirebase); 
     } catch (error) {
       console.error("Error fetching stories:", error);
     }  finally {
-      setLoading(false); // Set loading to false after fetching
+      setLoading(false); 
     }
   };
 
@@ -50,7 +50,6 @@ const Read: React.FC = () => {
       if (user) {
         try {
           await incrementReadCount(storyId);
-          // Navigate to the post details page
         } catch (error) {
           console.error("Error handling read post:", error);
         }
@@ -77,7 +76,6 @@ const Read: React.FC = () => {
               />
             </div>
 
-            {/* Text Content */}
             <div className="w-full md:w-2/3 order-2 md:order-none">
               <h2 className="text-3xl font-bold text-amber-500 mb-2">
                 {story.title}
@@ -86,12 +84,12 @@ const Read: React.FC = () => {
                 {story.content.substring(0, 250)}...
               </p>
               
-              {/* Author */}
+              
               <p className="text-sm text-gray-500">
                 Written by: {story.author || user?.name || "Anonymous"}
               </p>
 
-              {/* Read Count */}
+             
               <p className="text-sm text-gray-500">
                 Reads: {story.readCount || 0}
               </p>
@@ -132,7 +130,7 @@ const Read: React.FC = () => {
         ))}
       </div>
 
-      {/* Right section (Tags) */}
+     
       <div className="hidden md:block w-1/4 p-6 rounded-lg shadow-lg fixed right-8 h-[100vh] top-[6rem]">
         <h3 className="text-xl font-semibold text-white mb-4">Tags</h3>
         <div className="flex flex-wrap gap-2">

@@ -128,7 +128,7 @@ export default function SignInModal({ isOpen, onClose, openSignUp }: SignInModal
             size="lg"
             leftIcon={<FcGoogle />}
             borderColor="amber.500"
-            color="amber.500"
+            color="orange"
             _hover={{ bg: "gray.800" }}
             mb={4}
           >
